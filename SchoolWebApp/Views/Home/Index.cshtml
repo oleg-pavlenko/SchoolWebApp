@@ -1,0 +1,23 @@
+﻿@model SchoolWebApp.Models.StudentToDisciplinesViewModel
+
+@{
+  ViewData["Title"] = "Home Page";
+}
+
+<div>
+  <h2>Hello @Model.Student.Email</h2>
+  <div class="col-md-4">
+    <form method="post" asp-action="SelectDisciplines">
+      @Html.HiddenFor(m => m.Student.Id)
+      @Html.HiddenFor(m => m.Student.Disciplines)
+      @for (int i = 0; i < Model.Disciplines.Count(); i++)
+      {
+        <div class="form-control">
+          @Html.HiddenFor(d => d.Disciplines[i].Discipline.Id)
+          @Html.CheckBoxFor(d => d.Disciplines[i].IsSelected) @Model.Disciplines[i].Discipline.Title
+        </div>
+      }
+      <input type="submit" class="btn btn-primary mt-3" />
+    </form>
+  </div>
+</div>
