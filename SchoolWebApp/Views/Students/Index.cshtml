@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SchoolWebApp.Models.Student>
+
+@{
+  ViewData["Title"] = "Students";
+}
+
+<p>
+  <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+  <thead>
+    <tr>
+      <th>
+        @Html.DisplayNameFor(model => model.UserName)
+      </th>
+      <th>Disciplines</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+          @foreach (var d in item.Disciplines)
+          {
+            <ul>
+              <li>
+                @Html.DisplayFor(modelItem => d.Title)
+              </li>
+            </ul>
+          }
+        </td>
+        <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id })</td>
+      </tr>
+    }
+  </tbody>
+</table>

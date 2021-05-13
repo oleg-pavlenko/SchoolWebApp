@@ -27,6 +27,9 @@
             @if (User.IsInRole("admin"))
             {
               <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Index">Students</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Disciplines" asp-action="Index">Disciplines</a>
               </li>
             }
