@@ -17,7 +17,7 @@ using SchoolWebApp.Models;
 
 namespace SchoolWebApp.Areas.Identity.Pages.Account
 {
-  [AllowAnonymous]
+  [Authorize(Roles = "admin")]
   public class RegisterModel : PageModel
   {
     private readonly SignInManager<Student> _signInManager;
@@ -61,8 +61,6 @@ namespace SchoolWebApp.Areas.Identity.Pages.Account
       [Display(Name = "Confirm password")]
       [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
       public string ConfirmPassword { get; set; }
-
-      public bool IsAdmin { get; set; }
     }
 
     public async Task OnGetAsync(string returnUrl = null)
@@ -79,15 +77,7 @@ namespace SchoolWebApp.Areas.Identity.Pages.Account
       {
         var user = new Student { UserName = Input.Email, Email = Input.Email };
         var result = await _userManager.CreateAsync(user, Input.Password);
-
-        if (Input.IsAdmin)
-        {
-          await _userManager.AddToRoleAsync(user, "admin");
-        }
-        else
-        {
-          await _userManager.AddToRoleAsync(user, "student");
-        }
+        await _userManager.AddToRoleAsync(user, "admin");
 
         if (result.Succeeded)
         {

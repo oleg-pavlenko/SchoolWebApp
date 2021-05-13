@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace SchoolWebApp.Controllers
 {
-  [Authorize(Roles = "student")]
   public class SelectDisciplinesController : Controller
   {
     private readonly ApplicationDbContext _db;
