@@ -1,10 +1,29 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject UserManager<Student> UserManager
+﻿@model SchoolWebApp.Models.StudentToDisciplinesViewModel
 
 @{
-  ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home";
 }
 
 <div>
-  <h2>Hello @User.Identity.Name</h2>
+  <p>Choose disciplines</p>
+  <div class="col-md-4">
+    <form method="post" asp-action="SelectDisciplines">
+      @Html.HiddenFor(m => m.Student.Id)
+      @Html.HiddenFor(m => m.Student.Disciplines)
+      @for (int i = 0; i < Model.Disciplines.Count(); i++)
+      {
+        <div class="form-control">
+          @Html.HiddenFor(d => d.Disciplines[i].Discipline.Id)
+          @Html.CheckBoxFor(d => d.Disciplines[i].IsSelected) @Model.Disciplines[i].Discipline.Title
+        </div>
+      }
+      <input type="submit" class="btn btn-primary mt-3" />
+    </form>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+      <div class="alert alert-success" role="alert">
+        @ViewBag.Message;
+      </div>
+    }
+  </div>
 </div>
