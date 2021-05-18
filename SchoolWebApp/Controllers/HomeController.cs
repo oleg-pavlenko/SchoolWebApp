@@ -47,10 +47,6 @@ namespace SchoolWebApp.Controllers
         Student = student,
         Disciplines = selectedDisciplines
       };
-      if (TempData["Message"] != null)
-      {
-        ViewBag.Message = TempData["Message"].ToString();
-      }
       return View(studentToDisciplines);
     }
 
@@ -60,20 +56,40 @@ namespace SchoolWebApp.Controllers
       Student student = _db.Users
           .Include(s => s.Disciplines)
           .SingleOrDefault(s => s.Id == studentDisciplines.Student.Id);
-      student.Disciplines.Clear();
+      List<Discipline> newDisciplines = new List<Discipline>();
 
-      foreach (DisciplineViewModel discipline in studentDisciplines.Disciplines)
+      foreach (var discipline in studentDisciplines.Disciplines)
       {
         if (discipline.IsSelected)
         {
-          Discipline newDiscipline = _db.Disciplines.SingleOrDefault(d => d.Id == discipline.Discipline.Id);
-          student.Disciplines.Add(newDiscipline);
+          Discipline disc = student.Disciplines.Where(d => d.Id == discipline.Discipline.Id).SingleOrDefault<Discipline>();
+          if (disc == null)
+          {
+            newDisciplines.Add(disc);
+          }
         }
       }
+      
+      int numOfRecSelDiscs = studentDisciplines.Disciplines.Where(d => d.IsSelected).ToList().Count;
+      int numOfStudDisc = student.Disciplines.Count;
 
-      _db.SaveChanges();
-      TempData["Message"] = "Changes saved";
+      if (numOfRecSelDiscs != numOfStudDisc || newDisciplines.Count > 0)
+      {
+        student.Disciplines.Clear();
 
+        foreach (DisciplineViewModel discipline in studentDisciplines.Disciplines)
+        {
+          if (discipline.IsSelected)
+          {
+            Discipline newDiscipline = _db.Disciplines.SingleOrDefault(d => d.Id == discipline.Discipline.Id);
+            student.Disciplines.Add(newDiscipline);
+          }
+        }
+
+        _db.SaveChanges();
+
+        return View("UpdateSuccess");
+      }
       return RedirectToAction(nameof(Index));
     }
 
